@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeCraftHub - Course Management</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%);
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      header h1 {
+        color: #3b82f6;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .form-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .form-section h2 {
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+      }
+
+      input,
+      textarea,
+      select {
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+      }
+
+      .btn-primary:disabled {
+        background: #93c5fd;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-success {
+        background: #10b981;
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      .btn-success:hover {
+        background: #059669;
+      }
+
+      .btn-danger {
+        background: #ef4444;
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      .btn-danger:hover {
+        background: #dc2626;
+      }
+
+      .btn-cancel {
+        background: #6b7280;
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        margin-left: 0.5rem;
+      }
+
+      .btn-cancel:hover {
+        background: #4b5563;
+      }
+
+      .courses-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .courses-section h2 {
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+      }
+
+      .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .course-card {
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        background: #fafafa;
+      }
+
+      .course-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .course-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+      }
+
+      .course-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        flex: 1;
+      }
+
+      .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+        margin-left: 1rem;
+      }
+
+      .status-not-started {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-in-progress {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .status-completed {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .course-description {
+        color: #4b5563;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+
+      .course-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .course-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .message {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        font-weight: 500;
+      }
+
+      .message-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #10b981;
+      }
+
+      .message-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #ef4444;
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        color: #6b7280;
+      }
+
+      .spinner {
+        border: 3px solid #e5e7eb;
+        border-top: 3px solid #3b82f6;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-right: 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6b7280;
+      }
+
+      .empty-state h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .edit-form {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid #e5e7eb;
+      }
+
+      .edit-form .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .edit-form input,
+      .edit-form textarea,
+      .edit-form select {
+        width: 100%;
+      }
+
+      .edit-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        header h1 {
+          font-size: 1.5rem;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .courses-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .course-header {
+          flex-direction: column;
+        }
+
+        .status-badge {
+          margin-left: 0;
+          margin-top: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>CodeCraftHub - Course Management</h1>
+      </header>
+
+      <div class="form-section">
+        <h2>Add New Course</h2>
+        <div id="formMessage"></div>
+        <form id="addCourseForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Course Name *</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="target_date">Target Date *</label>
+              <input type="date" id="target_date" name="target_date" required />
+            </div>
+            <div class="form-group">
+              <label for="status">Status *</label>
+              <select id="status" name="status" required>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label for="description">Description *</label>
+              <textarea id="description" name="description" required></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="submitBtn">
+            Add Course
+          </button>
+        </form>
+      </div>
+
+      <div class="courses-section">
+        <h2>All Courses</h2>
+        <div id="coursesContainer"></div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE_URL = "http://localhost:5000/api/courses";
+
+      let courses = [];
+      let editingCourseId = null;
+
+      async function fetchCourses() {
+        const container = document.getElementById("coursesContainer");
+        container.innerHTML =
+          '<div class="loading"><div class="spinner"></div>Loading courses...</div>';
+
+        try {
+          const response = await fetch(API_BASE_URL);
+          if (!response.ok) throw new Error("Failed to fetch courses");
+
+          const data = await response.json(); // ✅ Get the full response
+          courses = data.courses; // ✅ Extract the courses array
+          renderCourses();
+        } catch (error) {
+          container.innerHTML = `<div class="message message-error">Error loading courses: ${error.message}</div>`;
+        }
+      }
+
+      function renderCourses() {
+        const container = document.getElementById("coursesContainer");
+
+        if (courses.length === 0) {
+          container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Courses Yet</h3>
+                        <p>Add your first course using the form above.</p>
+                    </div>
+                `;
+          return;
+        }
+
+        container.innerHTML = `
+                <div class="courses-grid">
+                    ${courses
+                      .map((course) => createCourseCard(course))
+                      .join("")}
+                </div>
+            `;
+      }
+
+      function createCourseCard(course) {
+        const statusClass = course.status.toLowerCase().replace(" ", "-");
+        const formattedDate = new Date(course.created_at).toLocaleDateString(
+          "en-US",
+          {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }
+        );
+        const targetDate = new Date(course.target_date).toLocaleDateString(
+          "en-US",
+          {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }
+        );
+
+        if (editingCourseId === course.id) {
+          return `
+                    <div class="course-card">
+                        <form id="editForm-${
+                          course.id
+                        }" onsubmit="handleUpdate(event, '${course.id}')">
+                            <div class="form-group">
+                                <label>Course Name *</label>
+                                <input type="text" name="name" value="${escapeHtml(
+                                  course.name
+                                )}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description *</label>
+                                <textarea name="description" required>${escapeHtml(
+                                  course.description
+                                )}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Target Date *</label>
+                                <input type="date" name="target_date" value="${
+                                  course.target_date
+                                }" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status *</label>
+                                <select name="status" required>
+                                    <option value="Not Started" ${
+                                      course.status === "Not Started"
+                                        ? "selected"
+                                        : ""
+                                    }>Not Started</option>
+                                    <option value="In Progress" ${
+                                      course.status === "In Progress"
+                                        ? "selected"
+                                        : ""
+                                    }>In Progress</option>
+                                    <option value="Completed" ${
+                                      course.status === "Completed"
+                                        ? "selected"
+                                        : ""
+                                    }>Completed</option>
+                                </select>
+                            </div>
+                            <div class="edit-actions">
+                                <button type="submit" class="btn-success">Save</button>
+                                <button type="button" class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+        }
+
+        return `
+                <div class="course-card">
+                    <div class="course-header">
+                        <h3 class="course-title">${escapeHtml(course.name)}</h3>
+                        <span class="status-badge status-${statusClass}">${
+          course.status
+        }</span>
+                    </div>
+                    <p class="course-description">${escapeHtml(
+                      course.description
+                    )}</p>
+                    <div class="course-meta">
+                        <div>
+                            <div><strong>Target:</strong> ${targetDate}</div>
+                            <div><strong>Created:</strong> ${formattedDate}</div>
+                        </div>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn-success" onclick="startEdit('${
+                          course.id
+                        }')">Edit</button>
+                        <button class="btn-danger" onclick="handleDelete('${
+                          course.id
+                        }')">Delete</button>
+                    </div>
+                </div>
+            `;
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function showMessage(elementId, message, isError = false) {
+        const messageEl = document.getElementById(elementId);
+        messageEl.innerHTML = `
+                <div class="message ${
+                  isError ? "message-error" : "message-success"
+                }">
+                    ${message}
+                </div>
+            `;
+        setTimeout(() => {
+          messageEl.innerHTML = "";
+        }, 5000);
+      }
+
+      document
+        .getElementById("addCourseForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const submitBtn = document.getElementById("submitBtn");
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Adding...";
+
+          const formData = new FormData(e.target);
+          const courseData = {
+            name: formData.get("name"),
+            description: formData.get("description"),
+            target_date: formData.get("target_date"),
+            status: formData.get("status"),
+          };
+
+          try {
+            const response = await fetch(API_BASE_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(courseData),
+            });
+
+            if (!response.ok) throw new Error("Failed to add course");
+
+            showMessage("formMessage", "Course added successfully!");
+            e.target.reset();
+            await fetchCourses();
+          } catch (error) {
+            showMessage("formMessage", `Error: ${error.message}`, true);
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Add Course";
+          }
+        });
+
+      function startEdit(courseId) {
+        editingCourseId = courseId;
+        renderCourses();
+      }
+
+      function cancelEdit() {
+        editingCourseId = null;
+        renderCourses();
+      }
+
+      async function handleUpdate(event, courseId) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const updateData = {
+          name: formData.get("name"),
+          description: formData.get("description"),
+          target_date: formData.get("target_date"),
+          status: formData.get("status"),
+        };
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/${courseId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updateData),
+          });
+
+          if (!response.ok) throw new Error("Failed to update course");
+
+          editingCourseId = null;
+          await fetchCourses();
+        } catch (error) {
+          alert(`Error updating course: ${error.message}`);
+        }
+      }
+
+      async function handleDelete(courseId) {
+        if (!confirm("Are you sure you want to delete this course?")) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/${courseId}`, {
+            method: "DELETE",
+          });
+
+          if (!response.ok) throw new Error("Failed to delete course");
+
+          await fetchCourses();
+        } catch (error) {
+          alert(`Error deleting course: ${error.message}`);
+        }
+      }
+
+      fetchCourses();
+    </script>
+  </body>
+</html>
